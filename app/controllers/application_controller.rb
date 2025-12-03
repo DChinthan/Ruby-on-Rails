@@ -1,7 +1,10 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  # Disable CSRF authenticity check in development (Codespaces issue)
+  skip_forgery_protection if: -> { Rails.env.development? }
+
+  # Only allow modern browsers
   allow_browser versions: :modern
 
-  # Changes to the importmap will invalidate the etag for HTML responses
+  # Auto-refresh when importmap changes
   stale_when_importmap_changes
 end

@@ -1,0 +1,55 @@
+<h1>Ticket #<%= @ticket.id %>: <%= @ticket.title %></h1>
+
+<p><strong>Status:</strong> <%= @ticket.status %></p>
+<p><strong>Priority:</strong> <%= @ticket.priority %></p>
+<p><strong>Category:</strong> <%= @ticket.category %></p>
+<p><strong>Owner:</strong> <%= @ticket.user.email %></p>
+<p><strong>Assigned to:</strong> <%= @ticket.assigned_to&.email || "Not assigned" %></p>
+
+<h3>Description</h3>
+<p><%= simple_format(@ticket.description) %></p>
+
+<h3>Attachments</h3>
+<% if @ticket.attachments.attached? %>
+  <ul>
+    <% @ticket.attachments.each do |file| %>
+      <li><%= link_to file.filename.to_s, url_for(file) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No attachments.</p>
+<% end %>
+
+<p>
+  <% if current_user.admin? || current_user.agent? || current_user == @ticket.user %>
+    <%= link_to "Edit", edit_ticket_path(@ticket) %> |
+  <% end %>
+
+  <%= link_to "Back", tickets_path %>
+</p>
+
+<hr>
+
+<h2>Comments</h2>
+
+<%= turbo_frame_tag "comments" do %>
+  <div id="comments-list">
+    <% @ticket.comments.order(created_at: :asc).each do |comment| %>
+      <div style="border: 1px solid #ccc; padding: 8px; margin-bottom: 10px;">
+        <p><strong><%= comment.user.email %></strong> </p>
+        <p><%= simple_format(comment.body) %></p>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<h3>Add a Comment</h3>
+
+<%= form_with model: [@ticket, @comment] do |form| %>
+  <p>
+    <%= form.text_area :body, rows: 3 %>
+  </p>
+  <p>
+    <%= form.submit "Add Comment" %>
+  </p>
+<% end %>

@@ -1,0 +1,53 @@
+<%= form_with model: @ticket, local: true do |form| %>
+
+  <% if @ticket.errors.any? %>
+    <div style="color: red;">
+      <h3><%= pluralize(@ticket.errors.count, "error") %> prevented saving:</h3>
+      <ul>
+        <% @ticket.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </p>
+
+  <p>
+    <%= form.label :description %><br>
+    <%= form.text_area :description, rows: 5 %>
+  </p>
+
+  <p>
+    <%= form.label :status %><br>
+    <%= form.select :status, Ticket.statuses.keys.map { |s| [s.humanize, s] } %>
+  </p>
+
+  <p>
+    <%= form.label :priority %><br>
+    <%= form.select :priority, Ticket.priorities.keys.map { |p| [p.humanize, p] } %>
+  </p>
+
+  <p>
+    <%= form.label :category %><br>
+    <%= form.text_field :category %>
+  </p>
+
+  <p>
+    <%= form.label :assigned_to_id, "Assigned To (user ID)" %><br>
+    <%= form.number_field :assigned_to_id %>
+  </p>
+
+  <p>
+    <%= form.label :attachments, "Attachments" %><br>
+    <%= form.file_field :attachments, multiple: true %>
+  </p>
+
+  <p>
+    <%= form.submit %>
+  </p>
+
+<% end %>

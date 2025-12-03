@@ -1,0 +1,12 @@
+<turbo-stream target="comments">
+  <template>
+    <div id="comments-list">
+      <% @ticket.comments.order(created_at: :asc).each do |comment| %>
+        <div style="border: 1px solid #ccc; padding: 8px; margin-bottom: 10px;">
+          <p><strong><%= comment.user.email %></strong></p>
+          <p><%= simple_format(comment.body) %></p>
+        </div>
+      <% end %>
+    </div>
+  </template>
+</turbo-stream>
